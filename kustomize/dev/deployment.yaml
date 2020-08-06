@@ -4,3 +4,10 @@ metadata:
   name: fortune-app
 spec:
   replicas: 2
+  template:
+    spec:
+      containers:
+      - name: fortune-app
+        env:
+        - name: SPRING_REDIS_HOST
+          value: "10.0.0.132"
