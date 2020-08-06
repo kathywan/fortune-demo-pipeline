@@ -37,7 +37,7 @@ pipeline {
             }
         }
 
-        stage ('Deploy_to_Dev') {
+        stage ('Deploy_to_Prod') {
              steps {
                      withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                         sh '''
