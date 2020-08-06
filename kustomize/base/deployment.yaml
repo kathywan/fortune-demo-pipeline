@@ -26,3 +26,5 @@ spec:
         env:
         - name: SPRING_REDIS_HOST
           value: "redis.sharedsvc.home.kwpivotal.com"
+        - name: SPRING_REDIS_PORT
+          value: "80"
