@@ -25,4 +25,4 @@ spec:
           protocol: TCP
         env:
         - name: SPRING_REDIS_HOST
-          value: "fortune-redis-master.default.svc.cluster.local"
+          value: "redis.sharedsvc.home.kwpivotal.com"
