@@ -25,6 +25,6 @@ spec:
           protocol: TCP
         env:
         - name: SPRING_REDIS_HOST
-          value: "redis.sharedsvc.home.kwpivotal.com"
+          value: "10.0.0.132"
         - name: SPRING_REDIS_PORT
-          value: "80"
+          value: "6379"
