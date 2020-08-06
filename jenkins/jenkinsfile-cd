@@ -20,7 +20,7 @@ pipeline {
         stage ('Perform System Test') {
             steps {
                 script {
-                    input(id: "System Test Pass Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                    input(id: "System Test Pass Gate", message: "If System Test passed, move forward?", ok: 'Start UAT Test')
                 }
             }
         }
