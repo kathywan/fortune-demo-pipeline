@@ -10,7 +10,7 @@ pipeline {
                             ARGOCD_SERVER="argocd.sharedsvc.home.kwpivotal.com"
                             
                             # Deploy to ArgoCD
-                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-dev 
+                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-dev --force
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app wait fortune-app-dev
                         '''
                }
@@ -40,7 +40,7 @@ pipeline {
                             ARGOCD_SERVER="argocd.sharedsvc.home.kwpivotal.com"
                             
                             # Deploy to ArgoCD
-                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-prod 
+                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-prod --force
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app wait fortune-app-prod
                         '''
                }
