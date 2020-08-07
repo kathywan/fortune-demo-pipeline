@@ -1,6 +1,22 @@
 pipeline {
     agent any
     
+    triggers {
+    GenericTrigger(
+        genericVariables: [
+            [key: 'ARTIFACT_URL', value: '$.event_data.resources[0].resource_url']
+        ],
+
+     causeString: 'Triggered on $ARTIFACT_URL',
+
+     token: 'f0rtun3',
+
+     printContributedVariables: true,
+     printPostContent: true,
+
+     silentResponse: false,
+    )
+
     stages {       
         
         stage ('Deploy_to_Dev') {
