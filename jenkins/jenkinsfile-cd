@@ -30,7 +30,7 @@ pipeline {
                     // Change image in the file
                     def ARTIFACT_URL = "${ARTIFACT_RESOURCE_URL}".take("${ARTIFACT_RESOURCE_URL}".lastIndexOf(':'))
                     ARTIFACT_URL = "${ARTIFACT_URL}@${ARTIFACT_DIGEST}"
-                    deploy_yaml.spec.template.spec.containers[0].image = $ARTIFACT_URL
+                    deploy_yaml.spec.template.spec.containers[0].image = ARTIFACT_URL
 
                     sh "rm $filename"
                     writeYaml file: filename, data: deploy_yaml
