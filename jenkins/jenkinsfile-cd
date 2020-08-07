@@ -16,11 +16,11 @@ pipeline {
     }
 
     stages {       
-        
+        def ARTIFACT_URL = "${ARTIFACT_RESOURCE_URL}".take("${ARTIFACT_RESOURCE_URL}".lastIndexOf(':'))
+        ARTIFACT_URL = "${ARTIFACT_URL}@${ARTIFACT_DIGEST}"
         stage ('Update_Manifest_Repo') {
             environment { 
                 GIT_AUTH = credentials('7cc49f46-3fda-44e1-860b-efcf4e0fbd63') 
-                ARTIFACT_URL = "${ARTIFACT_RESOURCE_URL}".take("${ARTIFACT_RESOURCE_URL}".lastIndexOf(':')) +"@${ARTIFACT_DIGEST}"
             }
             steps{
                 script{
