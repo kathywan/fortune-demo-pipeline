@@ -13,18 +13,18 @@ spec:
       labels:
         app: fortune-app
       annotations:
-        prometheus.io/path: '/actuator/prometheus'
+        prometheus.io/path: /actuator/prometheus
         prometheus.io/port: '8080'
-        prometheus.io/scrape: 'true'  
+        prometheus.io/scrape: 'true'
     spec:
       containers:
-      - image: harbor.sharedsvc.home.kwpivotal.com/apprepo/fortune-demo:tbs-release
+      - image: harbor.sharedsvc.home.kwpivotal.com/apprepo/fortune-demo@sha256:b0250c19e9e31a783a32feb74180edd880a6b34fc26c7e93f070357f628f6d42
         name: fortune-app
         ports:
         - containerPort: 8080
           protocol: TCP
         env:
         - name: SPRING_REDIS_HOST
-          value: "10.0.0.132"
+          value: 10.0.0.132
         - name: SPRING_REDIS_PORT
-          value: "6379"
+          value: '6379'
