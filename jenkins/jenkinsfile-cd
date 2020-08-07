@@ -28,7 +28,8 @@ pipeline {
                     def deploy_yaml = readYaml file:filename
 
                     // Change image in the file
-                    def ARTIFACT_URL = "${ARTIFACT_RESOURCE_URL}".take("${ARTIFACT_RESOURCE_URL}".lastIndexOf(':'))
+                    def takenum = "${ARTIFACT_RESOURCE_URL}".contains(':') ? "${ARTIFACT_RESOURCE_URL}".lastIndexOf(':') : "${ARTIFACT_RESOURCE_URL}".lastIndexOf('@')
+                    def ARTIFACT_URL = "${ARTIFACT_RESOURCE_URL}".take(takenum)
                     ARTIFACT_URL = "${ARTIFACT_URL}@${ARTIFACT_DIGEST}"
                     deploy_yaml.spec.template.spec.containers[0].image = ARTIFACT_URL
 
@@ -37,6 +38,7 @@ pipeline {
                 }
 
                 sh('''
+                    git checkout -B master
                     git config user.name 'kathywan'
                     git config user.email 'qwan@pivotal.io'
                     git add . && git commit -am "update deploy image"
