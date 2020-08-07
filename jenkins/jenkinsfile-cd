@@ -55,10 +55,8 @@ pipeline {
                      withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                         sh '''
                             ARGOCD_SERVER="argocd.sharedsvc.home.kwpivotal.com"
-                            # ARTIFACT_URL=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
                             # Deploy to ArgoCD
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-dev --force
-                            #ARGOCD_SERVER=$ARGOCD_SERVER argocd app set fortune-app-dev --kustomize-image $ARTIFACT_URL
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app wait fortune-app-dev
                         '''
                }
@@ -86,11 +84,8 @@ pipeline {
                      withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                         sh '''
                             ARGOCD_SERVER="argocd.sharedsvc.home.kwpivotal.com"
-                            # ARTIFACT_URL=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
-
                             # Deploy to ArgoCD
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-prod --force
-                            # ARGOCD_SERVER=$ARGOCD_SERVER argocd app set fortune-app-prod --kustomize-image $ARTIFACT_URL
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app wait fortune-app-prod
                         '''
                }
