@@ -7,7 +7,7 @@ pipeline {
                 [key: 'ARTIFACT_RESOURCE_URL', value: '$.event_data.resources[0].resource_url'],
                 [key: 'ARTIFACT_DIGEST', value: '$.event_data.resources[0].digest']
             ],
-            causeString: 'Triggered on $ARTIFACT_URL',
+            causeString: 'Triggered on $ARTIFACT_RESOURCE_URL',
             token: 'f0rtun3',
             printContributedVariables: true,
             printPostContent: true,
@@ -18,8 +18,6 @@ pipeline {
     stages {       
        
         stage ('Update_Manifest_Repo') {
-            def ARTIFACT_URL = "${ARTIFACT_RESOURCE_URL}".take("${ARTIFACT_RESOURCE_URL}".lastIndexOf(':'))
-            ARTIFACT_URL = "${ARTIFACT_URL}@${ARTIFACT_DIGEST}"
             
             environment { 
                 GIT_AUTH = credentials('7cc49f46-3fda-44e1-860b-efcf4e0fbd63') 
