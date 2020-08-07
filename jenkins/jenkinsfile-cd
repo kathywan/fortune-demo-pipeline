@@ -19,17 +19,12 @@ pipeline {
         )
     }
 
-    def deploy_yaml
-    node {       
-        def workspace = pwd() 
-        deploy_yaml = load "${workspace}@kustomize/base/deployment.yaml"
-    }
-
     stages {       
         
         stage ('Update_Manifest_Repo') {
             environment { 
                 GIT_AUTH = credentials('7cc49f46-3fda-44e1-860b-efcf4e0fbd63') 
+                ARTIFACT_URL=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
             }
             steps{
                 script{
@@ -37,8 +32,7 @@ pipeline {
                     def deploy_yaml = readYaml file:filename
 
                     // Change image in the file
-                    def artifact_url=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
-                    deploy_yaml.spec.template.spec.containers[0].image = artifact_url
+                    deploy_yaml.spec.template.spec.containers[0].image = $ARTIFACT_URL
 
                     sh "rm $filename"
                     writeYaml file: filename, data: deploy_yaml
