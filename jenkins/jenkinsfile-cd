@@ -19,17 +19,52 @@ pipeline {
         )
     }
 
+    def deploy_yaml
+    node {       
+        def workspace = pwd() 
+        deploy_yaml = load "${workspace}@kustomize/base/deployment.yaml"
+    }
+
     stages {       
         
+        stage ('Update_Manifest_Repo') {
+            environment { 
+                GIT_AUTH = credentials('7cc49f46-3fda-44e1-860b-efcf4e0fbd63') 
+            }
+            steps{
+                script{
+                    def filename="${WORKSPACE}/kustomize/base/deployment.yaml"
+                    def deploy_yaml = readYaml file:filename
+
+                    // Change image in the file
+                    def artifact_url=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
+                    deploy_yaml.spec.template.spec.containers[0].image = artifact_url
+
+                    sh "rm $filename"
+                    writeYaml file: filename, data: deploy_yaml
+                },
+
+                sh('''
+                    git config user.name 'kathywan'
+                    git config user.email 'qwan@pivotal.io'
+                    git add . && git commit -am "update deploy image"
+
+                    git config --local credential.helper "!f() { echo username=\\$GIT_AUTH_USR; echo password=\\$GIT_AUTH_PSW; }; f"
+                    git push origin master
+                ''')
+
+            }
+        }
+
         stage ('Deploy_to_Dev') {
              steps {
                      withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                         sh '''
                             ARGOCD_SERVER="argocd.sharedsvc.home.kwpivotal.com"
-                            ARTIFACT_URL=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
+                            # ARTIFACT_URL=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
                             # Deploy to ArgoCD
-                            # ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-dev --force
-                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app set fortune-app-dev --kustomize-image $ARTIFACT_URL
+                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-dev --force
+                            #ARGOCD_SERVER=$ARGOCD_SERVER argocd app set fortune-app-dev --kustomize-image $ARTIFACT_URL
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app wait fortune-app-dev
                         '''
                }
@@ -57,11 +92,11 @@ pipeline {
                      withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                         sh '''
                             ARGOCD_SERVER="argocd.sharedsvc.home.kwpivotal.com"
-                            ARTIFACT_URL=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
+                            # ARTIFACT_URL=${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST
 
                             # Deploy to ArgoCD
-                            #ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-prod --force
-                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app set fortune-app-prod --kustomize-image $ARTIFACT_URL
+                            ARGOCD_SERVER=$ARGOCD_SERVER argocd app sync fortune-app-prod --force
+                            # ARGOCD_SERVER=$ARGOCD_SERVER argocd app set fortune-app-prod --kustomize-image $ARTIFACT_URL
                             ARGOCD_SERVER=$ARGOCD_SERVER argocd app wait fortune-app-prod
                         '''
                }
