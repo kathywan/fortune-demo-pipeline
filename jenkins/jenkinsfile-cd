@@ -7,14 +7,10 @@ pipeline {
                 [key: 'ARTIFACT_RESOURCE_URL', value: '$.event_data.resources[0].resource_url'],
                 [key: 'ARTIFACT_DIGEST', value: '$.event_data.resources[0].digest']
             ],
-
             causeString: 'Triggered on $ARTIFACT_URL',
-
             token: 'f0rtun3',
-
             printContributedVariables: true,
             printPostContent: true,
-
             silentResponse: false
         )
     }
@@ -24,7 +20,7 @@ pipeline {
         stage ('Update_Manifest_Repo') {
             environment { 
                 GIT_AUTH = credentials('7cc49f46-3fda-44e1-860b-efcf4e0fbd63') 
-                ARTIFACT_URL=sh (${ARTIFACT_RESOURCE_URL%:*}@$ARTIFACT_DIGEST)
+                ARTIFACT_URL = ${ARTIFACT_RESOURCE_URL}.take(${ARTIFACT_RESOURCE_URL}.lastIndexOf(':')) + '@' + ${ARTIFACT_DIGEST}
             }
             steps{
                 script{
@@ -36,7 +32,7 @@ pipeline {
 
                     sh "rm $filename"
                     writeYaml file: filename, data: deploy_yaml
-                },
+                }
 
                 sh('''
                     git config user.name 'kathywan'
