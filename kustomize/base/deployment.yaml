@@ -18,7 +18,7 @@ spec:
         prometheus.io/scrape: 'true'
     spec:
       containers:
-      - image: harbor.sharedsvc.home.kwpivotal.com/apprepo/fortune-demo@sha256:3ef593481bdf1153bf0fc46c950bbe2c4b0288985159fb178c8626738de7a807
+      - image: harbor.sharedsvc.home.kwpivotal.com/apprepo/fortune-demo@sha256:b738a9368d1716c837d5e53b0900d9765af96a8800ac5113ee0d2e4c2a3f20fc
         name: fortune-app
         ports:
         - containerPort: 8080
